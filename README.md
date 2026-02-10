@@ -66,27 +66,27 @@ Frontend поднимается на `http://localhost:5173`.
 
 ### Dashboard
 
-![Dashboard](./01-dashboard.png)
+![Dashboard](./docs/screenshots/01-dashboard.png)
 
 ### Orders
 
-![Orders](./02-orders.png)
+![Orders](./docs/screenshots/02-orders.png)
 
 ### Order Details
 
-![Order Details](./03-order-details.png)
+![Order Details](./docs/screenshots/03-order-details.png)
 
 ### Templates
 
-![Templates](./04-templates.png)
+![Templates](./docs/screenshots/04-templates.png)
 
 ### Clients
 
-![Clients](./05-clients.png)
+![Clients](./docs/screenshots/05-clients.png)
 
 ### Settings
 
-![Settings](./06-settings.png)
+![Settings](./docs/screenshots/06-settings.png)
 
 ## API (MVP)
 
