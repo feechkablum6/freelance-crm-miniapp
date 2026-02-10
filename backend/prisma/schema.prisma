@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id         String   @id @default(cuid())
+  telegramId BigInt   @unique
+  name       String
+  username   String?
+  createdAt  DateTime @default(now())
+
+  clients   Client[]
+  orders    Order[]
+  templates MessageTemplate[]
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  contact   String?
+  source    String?
+  createdAt DateTime @default(now())
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@index([userId])
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  userId    String
+  clientId  String
+  title     String
+  budget    Float       @default(0)
+  status    OrderStatus @default(NEW)
+  deadline  DateTime?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  client    Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  tasks     Task[]
+  notes     OrderNote[]
+  reminders Reminder[]
+
+  @@index([userId])
+  @@index([clientId])
+  @@index([status])
+}
+
+enum OrderStatus {
+  NEW
+  IN_PROGRESS
+  IN_REVIEW
+  DONE
+  ARCHIVED
+}
+
+model Task {
+  id       String  @id @default(cuid())
+  orderId  String
+  title    String
+  done     Boolean @default(false)
+  position Int     @default(0)
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+model OrderNote {
+  id        String   @id @default(cuid())
+  orderId   String
+  text      String
+  createdAt DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+model MessageTemplate {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  body      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Reminder {
+  id        String   @id @default(cuid())
+  orderId   String
+  remindAt  DateTime
+  sent      Boolean  @default(false)
+  channel   String   @default("TELEGRAM")
+  createdAt DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([sent])
+}
